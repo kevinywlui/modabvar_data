@@ -1,6 +1,6 @@
 import sqlite3
 
-# @parallel
+@parallel
 def compute_data_at_level(N):
     print(N)
     for i, f in enumerate(Newforms(N, names='a')):
@@ -13,26 +13,26 @@ def compute_data_at_level(N):
             taylor_coefficients = C
             rank = next(n for n, x in enumerate(C) if abs(x) > 10e-10)
 
-            # c.execute("INSERT INTO mf VALUES ('{}', {}, '{}', {})" \
-            #         .format(label,
-            #             embedding,
-            #             taylor_coefficients,
-            #             rank))
+            c.execute("INSERT INTO mf VALUES ('{}', {}, '{}', {})" \
+                    .format(label,
+                        embedding,
+                        taylor_coefficients,
+                        rank))
 
-# conn = sqlite3.connect('modabvar_data.db')
+conn = sqlite3.connect('modabvar_data.db', timeout=600000)
 
-# c = conn.cursor()
-# c.execute('DROP TABLE if exists mf')
-# c.execute('''CREATE TABLE mf
-#         (label TEXT,
-#         embedding INT,
-#         taylor_coefficients TEXT,
-#         rank INT);''')
+c = conn.cursor()
+c.execute('DROP TABLE if exists mf')
+c.execute('''CREATE TABLE mf
+        (label TEXT,
+        embedding INT,
+        taylor_coefficients TEXT,
+        rank INT);''')
 
-Ns = (N for N in [1..500] if Newforms(N, names='a'))
-# compute_data_at_level(Ns)
-for N in Ns:
-    compute_data_at_level(N)
+Ns = (N for N in [1..50] if Newforms(N, names='a'))
+list(compute_data_at_level(Ns))
+# for N in Ns:
+#     compute_data_at_level(N)
         
-# conn.commit()
-# conn.close()
+conn.commit()
+conn.close()
