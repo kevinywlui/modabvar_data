@@ -5,8 +5,7 @@ def compute_data_at_level(N):
     print(N)
     for i, f in enumerate(Newforms(N, names='a')):
         for j in range(f.base_ring().degree()):
-            label = str(N) + chr(ord('a')+i)
-            embedding = j
+            label = str(N) + chr(ord('a')+i) + str(j)
             L = f.lseries(embedding = j)
             T = L.taylor_series(a = 1, k = 14)
             C = T.padded_list()
@@ -16,9 +15,8 @@ def compute_data_at_level(N):
             conn = sqlite3.connect('modabvar_data.db', timeout=600000)
             conn.execute('PRAGMA journal_mode=wal')
             c = conn.cursor()
-            c.execute("INSERT INTO mf VALUES ('{}', {}, '{}', {})" \
+            c.execute("INSERT INTO mf VALUES ('{}', '{}', {})" \
                     .format(label,
-                        embedding,
                         taylor_coefficients,
                         rank))
             conn.commit()
@@ -31,7 +29,6 @@ c = conn.cursor()
 c.execute('DROP TABLE if exists mf')
 c.execute('''CREATE TABLE mf
         (label TEXT,
-        embedding INT,
         taylor_coefficients TEXT,
         rank INT)''')
 conn.commit()
