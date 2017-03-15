@@ -13,13 +13,19 @@ def compute_data_at_level(N):
             taylor_coefficients = C
             rank = next(n for n, x in enumerate(C) if abs(x) > 10e-10)
 
+            conn = sqlite3.connect('modabvar_data.db', timeout=600000)
+            conn.execute('PRAGMA journal_mode=wal')
+            c = conn.cursor()
             c.execute("INSERT INTO mf VALUES ('{}', {}, '{}', {})" \
                     .format(label,
                         embedding,
                         taylor_coefficients,
                         rank))
+            conn.commit()
+            conn.close()
 
 conn = sqlite3.connect('modabvar_data.db', timeout=600000)
+conn.execute('PRAGMA journal_mode=wal')
 
 c = conn.cursor()
 c.execute('DROP TABLE if exists mf')
@@ -27,12 +33,12 @@ c.execute('''CREATE TABLE mf
         (label TEXT,
         embedding INT,
         taylor_coefficients TEXT,
-        rank INT);''')
+        rank INT)''')
+conn.commit()
+conn.close()
 
-Ns = (N for N in [1..50] if Newforms(N, names='a'))
+Ns = [1..100]
 list(compute_data_at_level(Ns))
 # for N in Ns:
 #     compute_data_at_level(N)
         
-conn.commit()
-conn.close()

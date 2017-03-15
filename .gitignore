@@ -1,4 +1,4 @@
 *.swp
 *.sage.py
-*.db
+*.db*
 *.sql
