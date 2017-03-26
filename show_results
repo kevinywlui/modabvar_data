@@ -1,0 +1,1 @@
+printf ".headers on\n.mode columns\n.output results.txt\nSELECT * FROM abvar;" | sqlite3 modabvar_data.db

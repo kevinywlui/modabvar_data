@@ -35,7 +35,7 @@ def compute_data_at_level(N):
 
         conn = sqlite3.connect('modabvar_data.db')
         c = conn.cursor()
-        c.execute("INSERT INTO abvar VALUES ({}, {}, {}, {}, {}, {}, {}" \
+        c.execute("INSERT INTO abvar VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}')" \
                 .format(label,
                         dim,
                         q_exp,
@@ -64,5 +64,5 @@ c.execute('''CREATE TABLE abvar (
 conn.commit()
 conn.close()
 
-Ns = [1..100]
+Ns = [1..500]
 list(compute_data_at_level(Ns))
