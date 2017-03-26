@@ -11,7 +11,6 @@ def compute_data_at_level(N):
 
         # compute the dimension
         dim = f.base_ring().degree()
-        dim = str(dim)
 
         # compute the q-exp
         q_exp = f.q_expansion()
@@ -21,9 +20,9 @@ def compute_data_at_level(N):
         lower_bound = T.divisor_of_order()
         upper_bound = T.multiple_of_order()
         if lower_bound == upper_bound:
-            order = lower_bound
+            order_of_torsion = lower_bound
         else:
-            order = '?'
+            order_of_torsion = '?'
 
         # compute the analytic rank
         rank = 0
