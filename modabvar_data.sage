@@ -1,4 +1,5 @@
 import sqlite3
+import sys
 
 @parallel
 def compute_data_at_level(N):
@@ -64,5 +65,10 @@ c.execute('''CREATE TABLE abvar (
 conn.commit()
 conn.close()
 
-Ns = [1..500]
+try:
+    M = sys.argv[1]
+except:
+    M = 100
+
+Ns = [1..M]
 list(compute_data_at_level(Ns))
