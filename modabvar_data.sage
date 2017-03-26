@@ -25,13 +25,13 @@ def compute_data_at_level(N):
             order_of_torsion = '?'
 
         # compute the analytic rank
-        rank = 0
+        analytic_rank = 0
         for j in range(dim):
             L = f.lseries(embedding = j)
             T = L.taylor_series(a = 1, k = 14)
             C = T.padded_list()
             rank_f = next(n for n, x in enumerate(C) if abs(x) > 10e-10)
-            rank += rank_f
+            analytic_rank += rank_f
 
         conn = sqlite3.connect('modabvar_data.db')
         c = conn.cursor()
