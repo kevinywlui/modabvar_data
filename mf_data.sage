@@ -12,7 +12,7 @@ def compute_data_at_level(N):
             taylor_coefficients = C
             rank = next(n for n, x in enumerate(C) if abs(x) > 10e-10)
 
-            conn = sqlite3.connect('modabvar_data.db', timeout=600000)
+            conn = sqlite3.connect('modabvar_data.db')
             conn.execute('PRAGMA journal_mode=wal')
             c = conn.cursor()
             c.execute("INSERT INTO mf VALUES ('{}', '{}', {})" \
@@ -36,6 +36,3 @@ conn.close()
 
 Ns = [1..100]
 list(compute_data_at_level(Ns))
-# for N in Ns:
-#     compute_data_at_level(N)
-        
