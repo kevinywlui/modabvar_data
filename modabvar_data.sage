@@ -25,6 +25,9 @@ def compute_data_at_level(N):
         else:
             order_of_torsion = '?'
 
+        # compute L(A_f,1)
+        l1 = A.lseries()(1)
+
         # compute the analytic rank
         analytic_rank = 0
         for j in range(dim):
@@ -36,13 +39,14 @@ def compute_data_at_level(N):
 
         conn = sqlite3.connect('modabvar_data.db')
         c = conn.cursor()
-        c.execute("INSERT INTO abvar VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}')" \
+        c.execute("INSERT INTO abvar VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')" \
                 .format(label,
                         dim,
                         q_exp,
                         lower_bound,
                         upper_bound,
                         order_of_torsion,
+                        l1,
                         analytic_rank))
 
         conn.commit()
@@ -59,6 +63,7 @@ c.execute('''CREATE TABLE abvar (
     lower_bound TEXT,
     upper_bound TEXT,
     order_of_torsion TEXT,
+    l1 TEXT,
     analytic_rank TEXT
 )''')
 
