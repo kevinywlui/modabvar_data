@@ -76,7 +76,7 @@ conn.commit()
 conn.close()
 
 try:
-    M = sys.argv[1]
+    M = int(sys.argv[1])
 except:
     M = 100
 
