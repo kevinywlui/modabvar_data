@@ -6,6 +6,7 @@ def compute_data_at_level(N):
     print(N)
     for i, f in enumerate(Newforms(N, names='a')):
         A = AbelianVariety(f)
+        L = A.lseries() 
 
         # compute the label
         label = str(N) + chr(ord('a')+i)
@@ -26,28 +27,32 @@ def compute_data_at_level(N):
             order_of_torsion = '?'
 
         # compute L(A_f,1)
-        l1 = A.lseries()(1)
+        l1 = L(1)
 
         # compute the analytic rank
-        analytic_rank = 0
-        for j in range(dim):
-            L = f.lseries(embedding = j)
-            T = L.taylor_series(a = 1, k = 14)
-            C = T.padded_list()
-            rank_f = next(n for n, x in enumerate(C) if abs(x) > 10e-10)
-            analytic_rank += rank_f
+        T = f.lseries().taylor_series(a = 1, k = 14)
+        C = T.padded_list()
+        rank_f = next(n for n, x in enumerate(C) if abs(x) > 0)
+        analytic_rank = dim * rank_f
+        # analytic_rank = 0
+        # for j in range(dim):
+        #     L = f.lseries(embedding = j)
+        #     T = L.taylor_series(a = 1, k = 14)
+        #     C = T.padded_list()
+        #     rank_f = next(n for n, x in enumerate(C) if abs(x) > 10e-10)
+        #     analytic_rank += rank_f
 
         conn = sqlite3.connect('modabvar_data.db')
         c = conn.cursor()
         c.execute("INSERT INTO abvar VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')" \
                 .format(label,
-                        dim,
-                        q_exp,
-                        lower_bound,
-                        upper_bound,
-                        order_of_torsion,
-                        l1,
-                        analytic_rank))
+                    dim,
+                    q_exp,
+                    lower_bound,
+                    upper_bound,
+                    order_of_torsion,
+                    l1,
+                    analytic_rank))
 
         conn.commit()
         conn.close()
