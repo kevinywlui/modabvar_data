@@ -1,4 +1,4 @@
-import sqlite3
+import psycopg2
 import sys
 
 @parallel
@@ -10,6 +10,9 @@ def compute_data_at_level(N):
 
         # compute the label
         label = str(N) + chr(ord('a')+i)
+
+        # compute the level
+        level = N
 
         # compute the dimension
         dim = f.base_ring().degree()
@@ -34,18 +37,12 @@ def compute_data_at_level(N):
         C = T.padded_list()
         rank_f = next(n for n, x in enumerate(C) if abs(x) > 0)
         analytic_rank = dim * rank_f
-        # analytic_rank = 0
-        # for j in range(dim):
-        #     L = f.lseries(embedding = j)
-        #     T = L.taylor_series(a = 1, k = 14)
-        #     C = T.padded_list()
-        #     rank_f = next(n for n, x in enumerate(C) if abs(x) > 10e-10)
-        #     analytic_rank += rank_f
 
-        conn = sqlite3.connect('modabvar_data.db')
+        conn = psycopg2.connect("dbname='modabvar' host='localhost'")
         c = conn.cursor()
-        c.execute("INSERT INTO abvar VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')" \
+        c.execute("INSERT INTO Af VALUES ('{}', {}, '{}', '{}', '{}', '{}', '{}', '{}', '{}')" \
                 .format(label,
+                    N,
                     dim,
                     q_exp,
                     lower_bound,
@@ -57,12 +54,13 @@ def compute_data_at_level(N):
         conn.commit()
         conn.close()
 
-conn = sqlite3.connect('modabvar_data.db')
+conn = psycopg2.connect("dbname='modabvar' host='localhost'")
 
 c = conn.cursor()
-c.execute('DROP TABLE if exists abvar')
-c.execute('''CREATE TABLE abvar (
+c.execute("DROP TABLE if exists Af")
+c.execute('''CREATE TABLE Af (
     label TEXT,
+    level INT,
     dimension TEXT,
     q_expansion TEXT,
     lower_bound TEXT,
