@@ -1,0 +1,1 @@
+printf "\o results.txt\nSELECT * FROM J0 ORDER BY level;" | psql modabvar
